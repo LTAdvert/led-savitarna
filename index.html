@@ -397,7 +397,7 @@
                                                 <thead className="bg-slate-50 text-[9px] font-black uppercase text-slate-400 border-b border-slate-100 text-left">
                                                     <tr>
                                                         <th className="p-4 w-12 text-center"><button className={`w-5 h-5 rounded border-2 transition-all flex items-center justify-center mx-auto bg-white border-slate-300 text-transparent`}><Icons.Check /></button></th>
-                                                        <th className="p-4">Kodas</th><th>Miestas</th><th>Ekranas</th><th>Parametrai (px)</th><th className="text-center">OTS</th><th className="text-center">CPT</th><th className="text-center">Kaina</th>
+                                                        <th className="p-4">Kodas</th><th>Miestas</th><th>Ekranas</th><th className="p-4 text-left">Tipas</th><th>Parametrai (px)</th><th className="text-center">OTS</th><th className="text-center">CPT</th><th className="text-center">Kaina</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="divide-y divide-slate-100 text-left">
@@ -417,6 +417,8 @@
                                                                 <td className="p-4 text-[9px] font-black text-slate-300 italic uppercase">{s.id}</td>
                                                                 <td className="p-4 font-black text-[11px] uppercase italic text-slate-700">{s.city}</td>
                                                                 <td className="p-4 font-black text-[11px] uppercase italic text-slate-700 leading-tight">{s.screen}</td>
+                                                                {/* Naujas stulpelis pagrindiniame lange */}
+                                                                <td className="p-4 text-[10px] font-bold text-slate-500 italic uppercase">{s.type}</td>
                                                                 <td className="p-4 text-[10px] font-bold text-slate-400 italic">{s.resolution}</td>
                                                                 <td className="p-4 text-center font-bold text-[11px]">{(s.ots/1000).toFixed(0)}k</td>
                                                                 <td className="p-4 text-center font-bold text-[11px] text-blue-500">{(s.ots > 0) ? ((rowPrice / (s.ots * campaignWeeks)) * 1000).toFixed(2) : '0'}</td>
@@ -464,7 +466,6 @@
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        {/* Naujas Peržiūra mygtukas */}
                                         <button onClick={() => setIsPreviewOpen(true)} disabled={selectedScreens.length === 0} className={`flex items-center gap-1.5 px-4 py-2 rounded-lg font-black uppercase text-[9px] transition-all active:scale-95 ${selectedScreens.length === 0 ? 'bg-slate-50 text-slate-300' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}`}><Icons.Eye size={12}/> Peržiūra</button>
                                         <button onClick={handleExcelExport} disabled={selectedScreens.length === 0} className={`flex items-center gap-1.5 px-4 py-2 rounded-lg font-black uppercase text-[9px] transition-all active:scale-95 ${selectedScreens.length === 0 ? 'bg-slate-50 text-slate-300' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'}`}><Icons.Download size={12}/> Excel</button>
                                         <button onClick={handleSaveOrder} disabled={selectedScreens.length === 0} className={`flex items-center gap-1.5 px-4 py-2 rounded-lg font-black uppercase text-[9px] transition-all active:scale-95 ${selectedScreens.length === 0 ? 'bg-slate-50 text-slate-300' : 'bg-slate-200 text-[#00A650] hover:bg-white border border-transparent hover:border-[#00A650]'}`}><Icons.Save size={12}/> Išsaugoti</button>
@@ -559,13 +560,15 @@
                                     <div className="bg-white border-2 border-slate-200 rounded-[2rem] overflow-hidden shadow-lg">
                                         <table className="w-full border-collapse">
                                             <thead className="bg-slate-900 text-white text-[10px] font-black uppercase italic tracking-widest text-left">
-                                                <tr><th className="p-6">Kodas ir Vieta</th><th className="text-center">Miestas</th><th className="text-center">OTS/sav.</th><th className="text-center">Baz. kaina</th><th className="text-center">Veiksmas</th></tr>
+                                                <tr><th className="p-6">Kodas ir Vieta</th><th className="text-center">Miestas</th><th className="p-6 text-center font-black italic">Tipas</th><th className="text-center">OTS/sav.</th><th className="text-center">Baz. kaina</th><th className="text-center">Veiksmas</th></tr>
                                             </thead>
                                             <tbody className="divide-y divide-slate-100 font-bold tracking-tight">
                                                 {screens.map(s => (
                                                     <tr key={s.id} className="hover:bg-slate-50 transition-colors">
                                                         <td className="p-6"><div className="text-[11px] font-black text-slate-900 uppercase italic">{s.screen}</div><div className="text-[9px] text-slate-400 font-bold uppercase">{s.id}</div></td>
                                                         <td className="p-6 text-center text-[11px] uppercase italic text-slate-700">{s.city}</td>
+                                                        {/* Naujas stulpelis nustatymuose */}
+                                                        <td className="p-6 text-center text-[11px] uppercase italic text-slate-500">{s.type}</td>
                                                         <td className="p-6 text-center text-[11px] font-black">{s.ots.toLocaleString()}</td>
                                                         <td className="p-4 text-center font-black text-[11px] text-[#00A650]">€{s.basePrice}</td>
                                                         <td className="p-6 text-center"><button onClick={() => setEditingScreen({...s})} className="p-2.5 bg-slate-100 text-slate-500 rounded-xl mx-auto hover:bg-[#00A650] hover:text-white transition-all shadow-sm"><Icons.Edit /></button></td>
@@ -596,7 +599,7 @@
                                         <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">OTS/sav.</label><input type="number" value={editingScreen.ots} onChange={e => setEditingScreen({...editingScreen, ots: parseInt(e.target.value) || 0})} className="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-3.5 px-6 text-sm font-black focus:border-[#00A650] outline-none transition-all" /></div>
                                         <div className="space-y-2"><label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Bazinė kaina</label><input type="number" value={editingScreen.basePrice} onChange={e => setEditingScreen({...editingScreen, basePrice: parseInt(e.target.value) || 0})} className="w-full bg-slate-50 border-2 border-transparent rounded-2xl py-3.5 px-6 text-sm font-black focus:border-[#00A650] outline-none transition-all" /></div>
                                     </div>
-                                    <div className="pt-8 border-t flex gap-4"><button type="submit" className="flex-1 bg-[#00A650] text-white py-5 rounded-[1.5rem] font-black uppercase tracking-widest shadow-lg hover:opacity-90 active:scale-95 transition-all">Išsaugoti</button><button type="button" onClick={() => setEditingScreen(null)} className="px-10 bg-slate-100 text-slate-500 py-5 rounded-[1.5rem] font-black uppercase tracking-widest hover:bg-slate-200 transition-all">Atšaukti</button></div>
+                                    <div className="pt-8 border-t flex gap-4"><button type="submit" className="flex-1 bg-[#00A650] text-white py-5 rounded-[1.5rem] font-black uppercase tracking-widest shadow-lg hover:opacity-90 transition-all">Išsaugoti</button><button type="button" onClick={() => setEditingScreen(null)} className="px-10 bg-slate-100 text-slate-500 py-5 rounded-[1.5rem] font-black uppercase tracking-widest hover:bg-slate-200 transition-all">Atšaukti</button></div>
                                 </form>
                             </div>
                         </div>
